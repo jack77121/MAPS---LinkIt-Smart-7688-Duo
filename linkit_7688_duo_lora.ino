@@ -25,6 +25,8 @@
 #include <SeeedOLED.h>
 #include <SoftwareSerial.h>
 #include <Adafruit_BME280.h>
+#include <GPS_FOX1.h>
+
 
 //define sea level embient pressure
 #define SEALEVELPRESSURE_HPA (1013.25)
@@ -40,6 +42,13 @@ uint8_t serialBuf[pmsDataLen];
 //our LoRa module, using software serial
 SoftwareSerial lora(5, 6); // RX, TX
 byte lora_trans[11];	//lora buffer
+
+//our GPS module, using software serial
+GPS_FOX1 gps;
+//#define GPS_RX 8
+//#define GPS_TX 9
+//SoftwareSerial gps(GPS_RX, GPS_TX); //RX, TX
+
 
 //global variable for sensing target
 float g_sht_temperature = 0;
@@ -69,7 +78,7 @@ void setup()
 	bme.begin();		//BME280
 	g5.begin(9600);		//G5
 	lora.begin(9600);	//LoRa
-
+	gps.begin(9600);
 	/*
 		pin D10 and D13 are connected to G5 pin 6 and pin 3 (D10 <-> G5 pin6, D13 <-> G5 pin3), 
 		set these to INPUT mode for temporarily, we might use this 2 pin in the future for power saving mode
@@ -88,12 +97,12 @@ void setup()
 }
 
 void loop()
-{ 
+{ 	
 	//get sensor value
 	RetrieveG5Value();
 	RetrieveSHTValue();
 	RetrieveBMEValue();
-	
+	RetrieveGPSValue();
 		
 	//for Oled display layout
 	SeeedOled.setTextXY(0,0);          //Set the cursor to Xth Page, Yth Column
@@ -296,5 +305,7 @@ void LoRaBitMap(byte &app_id, float &temperature, float &humidity, int &pm25, in
 	Serial.println(buff);
 	lora.listen();
 	lora.print(buff);
-	
+}
+void RetrieveGPSValue(){
+	gps.getGPGGA_GPRMC();		
 }
