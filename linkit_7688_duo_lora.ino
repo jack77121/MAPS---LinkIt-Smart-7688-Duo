@@ -25,7 +25,7 @@
 #include <SeeedOLED.h>
 #include <SoftwareSerial.h>
 #include <Adafruit_BME280.h>
-#include <GPS_FOX1.h>
+//#include <GPS_FOX1.h>
 
 
 //define sea level embient pressure
@@ -44,7 +44,7 @@ SoftwareSerial lora(5, 6); // RX, TX
 byte lora_trans[11];	//lora buffer
 
 //our GPS module, using software serial
-GPS_FOX1 gps;
+//GPS_FOX1 gps;
 //#define GPS_RX 8
 //#define GPS_TX 9
 //SoftwareSerial gps(GPS_RX, GPS_TX); //RX, TX
@@ -78,7 +78,7 @@ void setup()
 	bme.begin();		//BME280
 	g5.begin(9600);		//G5
 	lora.begin(9600);	//LoRa
-	gps.begin(9600);
+//	gps.begin(9600);
 	/*
 		pin D10 and D13 are connected to G5 pin 6 and pin 3 (D10 <-> G5 pin6, D13 <-> G5 pin3), 
 		set these to INPUT mode for temporarily, we might use this 2 pin in the future for power saving mode
@@ -102,35 +102,35 @@ void loop()
 	RetrieveG5Value();
 	RetrieveSHTValue();
 	RetrieveBMEValue();
-	RetrieveGPSValue();
+//	RetrieveGPSValue();
 		
 	//for Oled display layout
-	SeeedOled.setTextXY(0,0);          //Set the cursor to Xth Page, Yth Column
-	SeeedOled.putString("Temp: "); //Print the String
-	SeeedOled.putFloat(g_sht_temperature); 
-	
-	SeeedOled.setTextXY(1,0);          //Set the cursor to Xth Page, Yth Column
-	SeeedOled.putString("Humi: "); //Print the String
-	SeeedOled.putFloat(g_sht_humidity);
+//	SeeedOled.setTextXY(0,0);          //Set the cursor to Xth Page, Yth Column
+//	SeeedOled.putString("Temp: "); //Print the String
+//	SeeedOled.putFloat(g_sht_temperature); 
+//	
+//	SeeedOled.setTextXY(1,0);          //Set the cursor to Xth Page, Yth Column
+//	SeeedOled.putString("Humi: "); //Print the String
+//	SeeedOled.putFloat(g_sht_humidity);
 
 	
-	SeeedOled.setTextXY(2,0);          //Set the cursor to Xth Page, Yth Column
+	SeeedOled.setTextXY(0,0);          //Set the cursor to Xth Page, Yth Column
 	SeeedOled.putString("=====BME====="); //Print the String
-	SeeedOled.setTextXY(3,0);          //Set the cursor to Xth Page, Yth Column
+	SeeedOled.setTextXY(1,0);          //Set the cursor to Xth Page, Yth Column
 	SeeedOled.putString("Temp: "); //Print the String
 	SeeedOled.putFloat(g_bme_temperature); 
-	SeeedOled.setTextXY(4,0);          //Set the cursor to Xth Page, Yth Column
+	SeeedOled.setTextXY(2,0);          //Set the cursor to Xth Page, Yth Column
 	SeeedOled.putString("Humi: "); //Print the String
 	SeeedOled.putFloat(g_bme_humidity);
-	SeeedOled.setTextXY(5,0);          //Set the cursor to Xth Page, Yth Column
+	SeeedOled.setTextXY(3,0);          //Set the cursor to Xth Page, Yth Column
 	SeeedOled.putString("Baro: "); //Print the String
 	SeeedOled.putFloat(g_bme_baro);
 
-	SeeedOled.setTextXY(6,0);          //Set the cursor to Xth Page, Yth Column
+	SeeedOled.setTextXY(4,0);          //Set the cursor to Xth Page, Yth Column
 	SeeedOled.putString("PM2.5: "); //Print the String
 	SeeedOled.putNumber(g_pm25);
 	SeeedOled.putString("ug/m3"); //Print the String
-	SeeedOled.setTextXY(7,0);          //Set the cursor to Xth Page, Yth Column
+	SeeedOled.setTextXY(5,0);          //Set the cursor to Xth Page, Yth Column
 	SeeedOled.putString("PM10: "); //Print the String
 	SeeedOled.putNumber(g_pm100);
 	SeeedOled.putString("ug/m3"); //Print the String
@@ -306,6 +306,6 @@ void LoRaBitMap(byte &app_id, float &temperature, float &humidity, int &pm25, in
 	lora.listen();
 	lora.print(buff);
 }
-void RetrieveGPSValue(){
-	gps.getGPGGA_GPRMC();		
-}
+//void RetrieveGPSValue(){
+//	gps.getGPGGA_GPRMC();		
+//}
