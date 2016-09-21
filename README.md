@@ -1,6 +1,6 @@
 # MAPS-LinkIt Smart 7688 Duo
 ![Image of PCB layout]
-(https://github.com/jack77121/MAPS---LinkIt-Smart-7688-Duo/blob/master/MAPS_ 7688duo_appearance.png)
+(https://github.com/jack77121/MAPS---LinkIt-Smart-7688-Duo/blob/master/MAPS_7688duo_appearance.png)
 
 ## Story
 **M**icro **A**ir **P**ollution **S**ensing - MAPS
