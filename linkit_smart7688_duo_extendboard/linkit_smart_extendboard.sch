@@ -663,21 +663,6 @@ Type: &lt;b&gt;SPC4077 / SPC 4078&lt;/b&gt;&lt;p&gt;</description>
 wire to board 1.25 mm (.049 inch) pitch header&lt;p&gt;
 straight&lt;br&gt;
 Sourcxe: http://www.molex.com/pdm_docs/sd/530470210_sd.pdf</description>
-<wire x1="-5.775" y1="-1.5" x2="5.775" y2="-1.5" width="0.2032" layer="21"/>
-<wire x1="5.775" y1="-1.5" x2="5.775" y2="1.5" width="0.2032" layer="21"/>
-<wire x1="5.775" y1="1.5" x2="-5.775" y2="1.5" width="0.2032" layer="21"/>
-<wire x1="-5.775" y1="1.5" x2="-5.775" y2="-1.5" width="0.2032" layer="21"/>
-<wire x1="-5.75" y1="-0.25" x2="-5.375" y2="-0.25" width="0.0508" layer="21"/>
-<wire x1="-5.375" y1="-0.25" x2="-5.375" y2="-1.25" width="0.0508" layer="21"/>
-<wire x1="5.375" y1="-0.25" x2="5.75" y2="-0.25" width="0.0508" layer="21"/>
-<wire x1="5.375" y1="-0.25" x2="5.375" y2="-1.25" width="0.0508" layer="21"/>
-<wire x1="-5.75" y1="0.375" x2="-5.375" y2="0.375" width="0.0508" layer="21"/>
-<wire x1="5.375" y1="0.375" x2="5.75" y2="0.375" width="0.0508" layer="21"/>
-<wire x1="-5.375" y1="0.375" x2="-5.375" y2="1.125" width="0.0508" layer="21"/>
-<wire x1="-5.375" y1="1.125" x2="5.375" y2="1.125" width="0.0508" layer="21"/>
-<wire x1="5.375" y1="1.125" x2="5.375" y2="0.375" width="0.0508" layer="21"/>
-<wire x1="5.375" y1="1.125" x2="5.625" y2="1.375" width="0.0508" layer="21"/>
-<wire x1="-5.375" y1="1.125" x2="-5.625" y2="1.375" width="0.0508" layer="21"/>
 <pad name="1" x="4.375" y="0.45" drill="0.5" diameter="0.6984" shape="long" rot="R90"/>
 <pad name="2" x="3.125" y="0.45" drill="0.5" diameter="0.6984" shape="long" rot="R90"/>
 <pad name="3" x="1.875" y="0.45" drill="0.5" diameter="0.6984" shape="long" rot="R90"/>
@@ -688,7 +673,6 @@ Sourcxe: http://www.molex.com/pdm_docs/sd/530470210_sd.pdf</description>
 <pad name="8" x="-4.375" y="0.45" drill="0.5" diameter="0.6984" shape="long" rot="R90"/>
 <text x="-5.625" y="1.75" size="1.27" layer="25">&gt;NAME</text>
 <text x="1.125" y="1.75" size="1.27" layer="27">&gt;VALUE</text>
-<rectangle x1="-5.75" y1="-1.5" x2="5.75" y2="-1.125" layer="21"/>
 </package>
 <package name="53048-08">
 <description>&lt;b&gt;CONNECTOR&lt;/b&gt;&lt;p&gt;
@@ -8785,8 +8769,8 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <package name="PIN2MM">
 <pad name="5V" x="0.5" y="0.5" drill="0.6" shape="square"/>
 <pad name="GND" x="2" y="0.5" drill="0.6" shape="square"/>
-<text x="0" y="-0.5" size="0.4064" layer="21">5V</text>
-<text x="1.5" y="-0.5" size="0.4064" layer="21">GND</text>
+<text x="0" y="-1.008" size="0.4064" layer="21">5V</text>
+<text x="1.5" y="-1.008" size="0.4064" layer="21">GND</text>
 </package>
 </packages>
 <symbols>
