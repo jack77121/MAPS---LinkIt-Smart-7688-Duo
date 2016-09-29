@@ -8764,6 +8764,46 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="pin_2mm">
+<packages>
+<package name="PIN2MM">
+<pad name="5V" x="0.5" y="0.5" drill="0.6" shape="square"/>
+<pad name="GND" x="2" y="0.5" drill="0.6" shape="square"/>
+<text x="0" y="-1.008" size="0.4064" layer="21">5V</text>
+<text x="1.5" y="-1.008" size="0.4064" layer="21">GND</text>
+</package>
+</packages>
+<symbols>
+<symbol name="PIN2MM">
+<description>2mm pin head</description>
+<wire x1="0" y1="0" x2="0" y2="30.48" width="0.254" layer="94"/>
+<wire x1="0" y1="30.48" x2="30.48" y2="30.48" width="0.254" layer="94"/>
+<wire x1="30.48" y1="30.48" x2="30.48" y2="0" width="0.254" layer="94"/>
+<wire x1="30.48" y1="0" x2="0" y2="0" width="0.254" layer="94"/>
+<pin name="5V" x="-5.08" y="25.4" length="middle"/>
+<pin name="GND" x="-5.08" y="5.08" length="middle"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="PIN2MM">
+<description>2mm pin head</description>
+<gates>
+<gate name="G$1" symbol="PIN2MM" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="PIN2MM">
+<connects>
+<connect gate="G$1" pin="5V" pad="5V"/>
+<connect gate="G$1" pin="GND" pad="GND"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -8773,6 +8813,28 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <class number="0" name="default" width="0" drill="0">
 </class>
 </classes>
+<modules>
+<module name="PIN" prefix="" dx="30.48" dy="20.32">
+<ports>
+</ports>
+<variantdefs>
+</variantdefs>
+<parts>
+</parts>
+<sheets>
+<sheet>
+<plain>
+</plain>
+<instances>
+</instances>
+<busses>
+</busses>
+<nets>
+</nets>
+</sheet>
+</sheets>
+</module>
+</modules>
 <parts>
 <part name="U$1" library="linkit7688" deviceset="LINKIT7688" device=""/>
 <part name="L" library="adafruit" deviceset="PINHD-1X20" device="-BIG" value="L"/>
@@ -8841,6 +8903,9 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <part name="Q2" library="adafruit" deviceset="MOSFET-N" device="WAVE"/>
 <part name="+3V6" library="supply1" deviceset="+3V3" device=""/>
 <part name="+3V7" library="supply1" deviceset="+3V3" device=""/>
+<part name="U$4" library="pin_2mm" deviceset="PIN2MM" device=""/>
+<part name="P+6" library="supply1" deviceset="+5V" device=""/>
+<part name="GND23" library="supply1" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -8949,6 +9014,9 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <instance part="Q2" gate="G$1" x="86.36" y="15.24"/>
 <instance part="+3V6" gate="G$1" x="76.2" y="27.94" rot="R90"/>
 <instance part="+3V7" gate="G$1" x="76.2" y="12.7" rot="R90"/>
+<instance part="U$4" gate="G$1" x="-66.04" y="-15.24"/>
+<instance part="P+6" gate="1" x="-73.66" y="10.16" rot="R90"/>
+<instance part="GND23" gate="1" x="-71.12" y="-12.7"/>
 </instances>
 <busses>
 <bus name="SDA">
@@ -9050,6 +9118,11 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <junction x="83.82" y="-15.24"/>
 <junction x="76.2" y="-15.24"/>
 <junction x="83.82" y="-7.62"/>
+</segment>
+<segment>
+<pinref part="U$4" gate="G$1" pin="5V"/>
+<pinref part="P+6" gate="1" pin="+5V"/>
+<junction x="-71.12" y="10.16"/>
 </segment>
 </net>
 <net name="+3V3" class="0">
@@ -9291,6 +9364,11 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <pinref part="U1" gate="U1" pin="SDO/ADR"/>
 <pinref part="GND22" gate="1" pin="GND"/>
 <junction x="167.64" y="93.98"/>
+</segment>
+<segment>
+<pinref part="U$4" gate="G$1" pin="GND"/>
+<pinref part="GND23" gate="1" pin="GND"/>
+<junction x="-71.12" y="-10.16"/>
 </segment>
 </net>
 <net name="N$10" class="0">
