@@ -8899,8 +8899,8 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <part name="+3V13" library="supply1" deviceset="+3V3" device=""/>
 <part name="U1" library="BME280ComponentLibrary" deviceset="BME280" device="" value="BME280"/>
 <part name="GND22" library="supply1" deviceset="GND" device=""/>
-<part name="Q1" library="adafruit" deviceset="MOSFET-N" device="WAVE"/>
-<part name="Q2" library="adafruit" deviceset="MOSFET-N" device="WAVE"/>
+<part name="BSS138N_01" library="adafruit" deviceset="MOSFET-N" device="WAVE"/>
+<part name="BSS138N_02" library="adafruit" deviceset="MOSFET-N" device="WAVE"/>
 <part name="+3V6" library="supply1" deviceset="+3V3" device=""/>
 <part name="+3V7" library="supply1" deviceset="+3V3" device=""/>
 <part name="U$4" library="pin_2mm" deviceset="PIN2MM" device=""/>
@@ -9010,8 +9010,8 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <instance part="+3V13" gate="G$1" x="203.2" y="104.14" rot="R270"/>
 <instance part="U1" gate="U1" x="182.88" y="101.6"/>
 <instance part="GND22" gate="1" x="167.64" y="91.44"/>
-<instance part="Q1" gate="G$1" x="86.36" y="30.48"/>
-<instance part="Q2" gate="G$1" x="86.36" y="15.24"/>
+<instance part="BSS138N_01" gate="G$1" x="86.36" y="30.48"/>
+<instance part="BSS138N_02" gate="G$1" x="86.36" y="15.24"/>
 <instance part="+3V6" gate="G$1" x="76.2" y="27.94" rot="R90"/>
 <instance part="+3V7" gate="G$1" x="76.2" y="12.7" rot="R90"/>
 <instance part="U$4" gate="G$1" x="-66.04" y="-15.24"/>
@@ -9209,13 +9209,13 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <junction x="200.66" y="104.14"/>
 </segment>
 <segment>
-<pinref part="Q1" gate="G$1" pin="G"/>
+<pinref part="BSS138N_01" gate="G$1" pin="G"/>
 <pinref part="+3V6" gate="G$1" pin="+3V3"/>
 <wire x1="78.74" y1="27.94" x2="83.82" y2="27.94" width="0.1524" layer="91"/>
 <junction x="83.82" y="27.94"/>
 </segment>
 <segment>
-<pinref part="Q2" gate="G$1" pin="G"/>
+<pinref part="BSS138N_02" gate="G$1" pin="G"/>
 <pinref part="+3V7" gate="G$1" pin="+3V3"/>
 <wire x1="78.74" y1="12.7" x2="83.82" y2="12.7" width="0.1524" layer="91"/>
 <junction x="83.82" y="12.7"/>
@@ -9432,7 +9432,7 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <junction x="167.64" y="5.08"/>
 </segment>
 <segment>
-<pinref part="Q2" gate="G$1" pin="S"/>
+<pinref part="BSS138N_02" gate="G$1" pin="S"/>
 <wire x1="114.3" y1="10.16" x2="88.9" y2="10.16" width="0.1524" layer="91"/>
 <junction x="88.9" y="10.16"/>
 </segment>
@@ -9463,7 +9463,7 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <junction x="111.76" y="93.98"/>
 </segment>
 <segment>
-<pinref part="Q1" gate="G$1" pin="S"/>
+<pinref part="BSS138N_01" gate="G$1" pin="S"/>
 <wire x1="88.9" y1="25.4" x2="111.76" y2="25.4" width="0.1524" layer="91"/>
 <junction x="88.9" y="25.4"/>
 </segment>
@@ -9853,7 +9853,7 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <net name="N$36" class="0">
 <segment>
 <wire x1="142.24" y1="25.4" x2="124.46" y2="25.4" width="0.1524" layer="91"/>
-<pinref part="Q1" gate="G$1" pin="D"/>
+<pinref part="BSS138N_01" gate="G$1" pin="D"/>
 <wire x1="124.46" y1="25.4" x2="124.46" y2="35.56" width="0.1524" layer="91"/>
 <wire x1="124.46" y1="35.56" x2="88.9" y2="35.56" width="0.1524" layer="91"/>
 <junction x="88.9" y="35.56"/>
@@ -9864,7 +9864,7 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <net name="N$39" class="0">
 <segment>
 <wire x1="142.24" y1="22.86" x2="96.52" y2="22.86" width="0.1524" layer="91"/>
-<pinref part="Q2" gate="G$1" pin="D"/>
+<pinref part="BSS138N_02" gate="G$1" pin="D"/>
 <wire x1="96.52" y1="22.86" x2="96.52" y2="20.32" width="0.1524" layer="91"/>
 <wire x1="96.52" y1="20.32" x2="88.9" y2="20.32" width="0.1524" layer="91"/>
 <junction x="88.9" y="20.32"/>
