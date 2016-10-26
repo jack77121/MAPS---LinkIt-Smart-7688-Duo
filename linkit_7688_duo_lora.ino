@@ -1,31 +1,9 @@
-/*
-	Version: 1.00
-	Purpose: This project use LinkIt Smart 7688 Duo, G5(PMS5003), BME280, SHT25 and Gemtek LoRa module, 
-             to achieve environmental sensing, target include PM1, PM2.5, PM10, temperature, humidity, embient pressure.
-			 Using SeeedOLED for value display.
-             
-             Using sensors:
-             	-- BME280: 		for temperature, humidity and ambient pressure
-             	-- SHT25:		for temperature and humidity (for BME value calibration)
-             	-- LoRa module: GIoT GL6509 (Gemtek LoRa)
-             First, make sure all the sensors and lora module are working properly 
-             in this project - G5, BME280, GIoT LoRa module and SHT25.
-             Due to the bandwidth limitation when using Gemtek module, in Taipei, Taiwan,
-             we need some bitwise operation, shifting everything into 11 bytes, the function "LoRaBitMap"
-             below will help you in doing this. 
-             For more information about bit shifting, please refer: http://www.slideshare.net/HuChengLee/taipei-iot-lora-workshop
-    
-    
-	History:
-	1.00  by Hu-Cheng Lee (Jack, jack77121@gmail.com)  01/09/2016 (DD/MM/YYYY) 
-*/
-
 //include library what we need
 #include <SHT2x.h>
-#include <SeeedOLED.h>
+//#include <SeeedOLED.h>
 #include <SoftwareSerial.h>
 #include <Adafruit_BME280.h>
-#include <GPS_FOX1.h>
+//#include <GPS_FOX1.h>
 
 
 //define sea level embient pressure
@@ -44,7 +22,7 @@ SoftwareSerial lora(5, 6); // RX, TX
 byte lora_trans[11];	//lora buffer
 
 //our GPS module, using software serial
-GPS_FOX1 gps;
+//GPS_FOX1 gps;
 //#define GPS_RX 8
 //#define GPS_TX 9
 //SoftwareSerial gps(GPS_RX, GPS_TX); //RX, TX
@@ -60,9 +38,9 @@ float g_bme_baro = 0;
 
 byte g_app_id = 5;	//5 for using LinkIt Smart 7688 Duo
 
-int g_pm10 = 0;	//PM1
-int g_pm25 = 0;	//PM2.5
-int g_pm100 = 0;//PM10
+int g_pm10 = -1;	//PM1
+int g_pm25 = -1;	//PM2.5
+int g_pm100 = -1;//PM10
 int g_fix_num = 15;//value 15 means fake GPS, change this value to 0 if you using real GPS module
 
 //GPS in DMS format
@@ -70,15 +48,17 @@ char GPS_LAT[] = "25.0228";  // device's gps latitude, IIS NRL, Academia Sinica
 char GPS_LON[] = "121.3652"; // device's gps longitude, IIS NRL, Academia Sinica
 //DD format: 25.041114, 121.614444
 
+String dev_id = "001"; 
 
 void setup()
 {	
 
 	Serial.begin(9600);	//debug serial
+	Serial1.begin(57600);	//connect to MT7688
 	bme.begin();		//BME280
 	g5.begin(9600);		//G5
 	lora.begin(9600);	//LoRa
-	gps.begin(9600);
+//	gps.begin(9600);
 	/*
 		pin D10 and D13 are connected to G5 pin 6 and pin 3 (D10 <-> G5 pin6, D13 <-> G5 pin3), 
 		set these to INPUT mode for temporarily, we might use this 2 pin in the future for power saving mode
@@ -87,17 +67,19 @@ void setup()
 	pinMode(13, INPUT); 
 
 	//SeeedOled setting
-	SeeedOled.init();  //initialze SEEED OLED display
+//	SeeedOled.init();  //initialze SEEED OLED display
 	DDRB|=0x21;        //digital pin 8, LED glow indicates Film properly Connected .
 	PORTB |= 0x21;
-	SeeedOled.clearDisplay();          //clear the screen and set start position to top left corner
-	SeeedOled.setNormalDisplay();      //Set display to normal mode (i.e non-inverse mode)
-	SeeedOled.setPageMode();           //Set addressing mode to Page Mode
+//	SeeedOled.clearDisplay();          //clear the screen and set start position to top left corner
+//	SeeedOled.setNormalDisplay();      //Set display to normal mode (i.e non-inverse mode)
+//	SeeedOled.setPageMode();           //Set addressing mode to Page Mode
 	delay(100); 
 }
 
 void loop()
-{ 	
+{ 	unsigned long time;
+	time = millis();
+	Serial.println(time);
 	//get sensor value
 	RetrieveG5Value();
 	RetrieveSHTValue();
@@ -105,47 +87,52 @@ void loop()
 	RetrieveGPSValue();
 		
 	//for Oled display layout
-	SeeedOled.setTextXY(0,0);          //Set the cursor to Xth Page, Yth Column
-	SeeedOled.putString("Temp: "); //Print the String
-	SeeedOled.putFloat(g_sht_temperature); 
-	
-	SeeedOled.setTextXY(1,0);          //Set the cursor to Xth Page, Yth Column
-	SeeedOled.putString("Humi: "); //Print the String
-	SeeedOled.putFloat(g_sht_humidity);
-
-	
-	SeeedOled.setTextXY(2,0);          //Set the cursor to Xth Page, Yth Column
-	SeeedOled.putString("=====BME====="); //Print the String
-	SeeedOled.setTextXY(3,0);          //Set the cursor to Xth Page, Yth Column
-	SeeedOled.putString("Temp: "); //Print the String
-	SeeedOled.putFloat(g_bme_temperature); 
-	SeeedOled.setTextXY(4,0);          //Set the cursor to Xth Page, Yth Column
-	SeeedOled.putString("Humi: "); //Print the String
-	SeeedOled.putFloat(g_bme_humidity);
-	SeeedOled.setTextXY(5,0);          //Set the cursor to Xth Page, Yth Column
-	SeeedOled.putString("Baro: "); //Print the String
-	SeeedOled.putFloat(g_bme_baro);
-
-	SeeedOled.setTextXY(6,0);          //Set the cursor to Xth Page, Yth Column
-	SeeedOled.putString("PM2.5: "); //Print the String
-	SeeedOled.putNumber(g_pm25);
-	SeeedOled.putString("ug/m3"); //Print the String
-	SeeedOled.setTextXY(7,0);          //Set the cursor to Xth Page, Yth Column
-	SeeedOled.putString("PM10: "); //Print the String
-	SeeedOled.putNumber(g_pm100);
-	SeeedOled.putString("ug/m3"); //Print the String
+//	SeeedOled.setTextXY(0,0);          //Set the cursor to Xth Page, Yth Column
+//	SeeedOled.putString("Temp: "); //Print the String
+//	SeeedOled.putFloat(g_sht_temperature); 
+//	
+//	SeeedOled.setTextXY(1,0);          //Set the cursor to Xth Page, Yth Column
+//	SeeedOled.putString("Humi: "); //Print the String
+//	SeeedOled.putFloat(g_sht_humidity);
+//
+//	
+//	SeeedOled.setTextXY(2,0);          //Set the cursor to Xth Page, Yth Column
+//	SeeedOled.putString("=====BME====="); //Print the String
+//	SeeedOled.setTextXY(3,0);          //Set the cursor to Xth Page, Yth Column
+//	SeeedOled.putString("Temp: "); //Print the String
+//	SeeedOled.putFloat(g_bme_temperature); 
+//	SeeedOled.setTextXY(4,0);          //Set the cursor to Xth Page, Yth Column
+//	SeeedOled.putString("Humi: "); //Print the String
+//	SeeedOled.putFloat(g_bme_humidity);
+//	SeeedOled.setTextXY(5,0);          //Set the cursor to Xth Page, Yth Column
+//	SeeedOled.putString("Baro: "); //Print the String
+//	SeeedOled.putFloat(g_bme_baro);
+//
+//	SeeedOled.setTextXY(6,0);          //Set the cursor to Xth Page, Yth Column
+//	SeeedOled.putString("PM2.5: "); //Print the String
+//	SeeedOled.putNumber(g_pm25);
+//	SeeedOled.putString("ug/m3"); //Print the String
+//	SeeedOled.setTextXY(7,0);          //Set the cursor to Xth Page, Yth Column
+//	SeeedOled.putString("PM10: "); //Print the String
+//	SeeedOled.putNumber(g_pm100);
+//	SeeedOled.putString("ug/m3"); //Print the String
 	lora.listen();
-	delay(10000);
+	delay(60000);
 	//Do the bit shifting, and push out the data through LoRa module
 	LoRaBitMap(g_app_id, g_bme_temperature, g_bme_humidity, g_pm25, g_pm100, GPS_LAT, GPS_LON, g_fix_num);
-
 	//Show value in debug serial
 	Display();
+	GetDataToMT7688();
 }
 void RetrieveG5Value() {
 	g5.listen();
 	uint8_t c = 0;
 	int idx = 0;
+	unsigned int calcsum = 0;
+	unsigned int exptsum;
+	g_pm10 = -1;	//PM1
+	g_pm25 = -1;	//PM2.5
+	g_pm100 = -1;//PM10
 	memset(serialBuf, 0, pmsDataLen);
 	
 	while (true) {
@@ -168,9 +155,15 @@ void RetrieveG5Value() {
 		serialBuf[idx++] = g5.read();
 	}
 
-	g_pm10 = ( serialBuf[10] << 8 ) | serialBuf[11];
-	g_pm25 = ( serialBuf[12] << 8 ) | serialBuf[13];
-	g_pm100 = ( serialBuf[14] << 8 ) | serialBuf[15];
+	for(int i = 0; i < pmsDataLen-2; i++) {
+		calcsum += (unsigned int)serialBuf[i];
+    }
+    exptsum = ((unsigned int)serialBuf[30] << 8) + (unsigned int)serialBuf[31];
+	if(calcsum == exptsum){
+		g_pm10 = ( serialBuf[10] << 8 ) | serialBuf[11];
+		g_pm25 = ( serialBuf[12] << 8 ) | serialBuf[13];
+		g_pm100 = ( serialBuf[14] << 8 ) | serialBuf[15];
+	}
 }
 
 void RetrieveSHTValue(){
@@ -205,6 +198,21 @@ void Display(){
 
 	Serial.print("G5 PM10:\t\t");
 	Serial.println(g_pm100);
+}
+	
+void GetDataToMT7688(){
+	String temperature_str = String(g_bme_temperature, 2);
+	String humidity_str = String(g_bme_humidity, 2);
+	String baro_str = String(g_bme_baro, 2);
+	String pm10_str = String(g_pm10);
+	String pm25_str = String(g_pm25);
+	String pm100_str = String(g_pm100);
+	String dev_temperature_str = String(g_sht_temperature, 2);
+	String dev_humidity_str = String(g_sht_humidity, 2);
+	String data_str = String(dev_id + "|" + temperature_str + "|" + humidity_str + "|" + baro_str + "|" + pm10_str + "|" + pm25_str + "|" + pm100_str + "|" + dev_temperature_str + "|" + dev_humidity_str);
+	Serial.println("My string to MT7688:");
+	Serial.println(data_str);
+	Serial1.print(data_str);
 }
 
 void LoRaBitMap(byte &app_id, float &temperature, float &humidity, int &pm25, int &pm100, char *GPS_LAT, char *GPS_LON, int &fix_num){
@@ -249,12 +257,12 @@ void LoRaBitMap(byte &app_id, float &temperature, float &humidity, int &pm25, in
 	lora_trans[1] = (temperatureLora << 2) | (humiditylora >> 8);
 	lora_trans[2] = humiditylora;
 
-	Serial.print(lora_trans[0],HEX);
-	Serial.print("\t");
-	Serial.print(lora_trans[1],HEX);
-	Serial.print("\t");
-	Serial.print(lora_trans[2],HEX);
-	Serial.print("\t");
+//	Serial.print(lora_trans[0],HEX);
+//	Serial.print("\t");
+//	Serial.print(lora_trans[1],HEX);
+//	Serial.print("\t");
+//	Serial.print(lora_trans[2],HEX);
+//	Serial.print("\t");
 	// END FOR THE APP_ID, TEMPERATURE AND HUMIDITY
 
 	
@@ -263,15 +271,15 @@ void LoRaBitMap(byte &app_id, float &temperature, float &humidity, int &pm25, in
 	lora_trans[4] = (pm25lora << 5)|(pm100Offset >> 3);
 	
 	if(lora_trans[3] < 16){
-		Serial.print('0');
+//		Serial.print('0');
 	}
-	Serial.print(lora_trans[3],HEX);
-	Serial.print("\t");
+//	Serial.print(lora_trans[3],HEX);
+//	Serial.print("\t");
 	if(lora_trans[4] < 16){
-		Serial.print('0');
+//		Serial.print('0');
 	}
-	Serial.print(lora_trans[4],HEX);
-	Serial.print("\t");
+//	Serial.print(lora_trans[4],HEX);
+//	Serial.print("\t");
 	//END FOR PM2.5 AND PM10	
 	
 	lora_trans[5] = (pm100Offset <<5) | (lat_D >> 3);
@@ -279,25 +287,25 @@ void LoRaBitMap(byte &app_id, float &temperature, float &humidity, int &pm25, in
 	lora_trans[7] = (lat_M << 7) | (lat_S << 1) | (lon_D >> 8);
 	lora_trans[8] = (byte)lon_D;
 	if(lora_trans[5] < 16){
-		Serial.print('0');
+//		Serial.print('0');
 	}
-	Serial.print(lora_trans[5],HEX);
-	Serial.print("\t");
-	Serial.print(lora_trans[6],HEX);
-	Serial.print("\t");
-	Serial.print(lora_trans[7],HEX);
-	Serial.print("\t");
-	Serial.print(lora_trans[8],HEX);
-	Serial.print("\t");
+//	Serial.print(lora_trans[5],HEX);
+//	Serial.print("\t");
+//	Serial.print(lora_trans[6],HEX);
+//	Serial.print("\t");
+//	Serial.print(lora_trans[7],HEX);
+//	Serial.print("\t");
+//	Serial.print(lora_trans[8],HEX);
+//	Serial.print("\t");
 
 	lora_trans[9] = (lon_M << 2) | (lon_S >> 4);
 	lora_trans[10] = (lon_S << 4) | gps_fix;
 
-	Serial.print(lora_trans[9],HEX);
-	Serial.print("\t");
-	Serial.println(lora_trans[10],HEX);
+//	Serial.print(lora_trans[9],HEX);
+//	Serial.print("\t");
+//	Serial.println(lora_trans[10],HEX);
 
-	char buff[150];
+	char buff[33];
 	
 	sprintf(buff, "AT+DTX=22,%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X\r\n", lora_trans[0], lora_trans[1], \
 	lora_trans[2], lora_trans[3], lora_trans[4], lora_trans[5], lora_trans[6], lora_trans[7], lora_trans[8],  \
@@ -305,7 +313,8 @@ void LoRaBitMap(byte &app_id, float &temperature, float &humidity, int &pm25, in
 	Serial.println(buff);
 	lora.listen();
 	lora.print(buff);
+//	Serial1.write(buff,33);
 }
 void RetrieveGPSValue(){
-	gps.getGPGGA_GPRMC();		
+//	gps.getGPGGA_GPRMC();		
 }
