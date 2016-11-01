@@ -48,7 +48,7 @@ char GPS_LAT[] = "25.0228";  // device's gps latitude, IIS NRL, Academia Sinica
 char GPS_LON[] = "121.3652"; // device's gps longitude, IIS NRL, Academia Sinica
 //DD format: 25.041114, 121.614444
 
-String dev_id = "001"; 
+String dev_id = "002"; 
 
 void setup()
 {	
@@ -125,45 +125,52 @@ void loop()
 	GetDataToMT7688();
 }
 void RetrieveG5Value() {
-	g5.listen();
-	uint8_t c = 0;
-	int idx = 0;
-	unsigned int calcsum = 0;
-	unsigned int exptsum;
 	g_pm10 = -1;	//PM1
 	g_pm25 = -1;	//PM2.5
 	g_pm100 = -1;//PM10
-	memset(serialBuf, 0, pmsDataLen);
+	while(true){
+		g5.listen();
 	
-	while (true) {
-		while (c != 0x42) {
+		uint8_t c = 0;
+		int idx = 0;
+		unsigned int calcsum = 0;
+		unsigned int exptsum;
+		
+		memset(serialBuf, 0, pmsDataLen);
+		
+		while (true) {
+			while (c != 0x42) {
+				while (!g5.available());
+				c = g5.read();
+			}
 			while (!g5.available());
 			c = g5.read();
+			if (c == 0x4d) {
+				// now we got a correct header)
+				serialBuf[idx++] = 0x42;
+				serialBuf[idx++] = 0x4d;
+				break;
+			}
 		}
-		while (!g5.available());
-		c = g5.read();
-		if (c == 0x4d) {
-			// now we got a correct header)
-			serialBuf[idx++] = 0x42;
-			serialBuf[idx++] = 0x4d;
+	
+		while (idx != pmsDataLen) {
+			while(!g5.available());
+			serialBuf[idx++] = g5.read();
+		}
+	
+		for(int i = 0; i < pmsDataLen-2; i++) {
+			calcsum += (unsigned int)serialBuf[i];
+	    }
+	    exptsum = ((unsigned int)serialBuf[30] << 8) + (unsigned int)serialBuf[31];
+		if(calcsum == exptsum){
+			g_pm10 = ( serialBuf[10] << 8 ) | serialBuf[11];
+			g_pm25 = ( serialBuf[12] << 8 ) | serialBuf[13];
+			g_pm100 = ( serialBuf[14] << 8 ) | serialBuf[15];
 			break;
-		}
+		}	
+	
 	}
-
-	while (idx != pmsDataLen) {
-		while(!g5.available());
-		serialBuf[idx++] = g5.read();
-	}
-
-	for(int i = 0; i < pmsDataLen-2; i++) {
-		calcsum += (unsigned int)serialBuf[i];
-    }
-    exptsum = ((unsigned int)serialBuf[30] << 8) + (unsigned int)serialBuf[31];
-	if(calcsum == exptsum){
-		g_pm10 = ( serialBuf[10] << 8 ) | serialBuf[11];
-		g_pm25 = ( serialBuf[12] << 8 ) | serialBuf[13];
-		g_pm100 = ( serialBuf[14] << 8 ) | serialBuf[15];
-	}
+	
 }
 
 void RetrieveSHTValue(){
