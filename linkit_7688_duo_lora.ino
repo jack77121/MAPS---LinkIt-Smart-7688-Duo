@@ -135,113 +135,115 @@ String g_dev_id = "005";
 	    
 	#endif
 	void init_Sensor_PM(){
-	    #if Sense_PM == 1
+	    #if SENSE_PM == 1
 	      // do something you want to do
-	    #elif Sense_PM == 2
+	    #elif SENSE_PM == 2
 	      // do something you want to do 
-			
-	    #elif Sense_PM == 3
+//			mySerial.begin(9600);
+			pinMode(10, INPUT);
+			pinMode(13, INPUT);	
+	    #elif SENSE_PM == 3
 	      // do something you want to do 
-	    #elif Sense_PM == 4
+	    #elif SENSE_PM == 4
 	      // do something you want to do 
-	    #elif Sense_PM == 5
+	    #elif SENSE_PMPM == 5
 	      // do something you want to do
-	    #elif Sense_PM == 6
+	    #elif SENSE_PM == 6
 	      // do something you want to do
 	    #endif
 	    return;
 	  }
 	void get_Env_PM(int *PM10 = 0, int *PM25 = 0, int *PM100 = 0){
 
-		g_pm10 = -1;	//PM1
-		g_pm25 = -1;	//PM2.5
-		g_pm100 = -1;//PM10
-		while(true){
-			mySerial.listen();
+//		g_pm10 = -1;	//PM1
+//		g_pm25 = -1;	//PM2.5
+//		g_pm100 = -1;//PM10
+//		while(true){
+//			mySerial.listen();
+//		
+//			uint8_t c = 0;
+//			int idx = 0;
+//			unsigned int calcsum = 0;
+//			unsigned int exptsum;
+//			
+//			memset(serialBuf, 0, pmsDataLen);
+//			
+//			while (true) {
+//				while (c != 0x42) {
+//					while (!mySerial.available());
+//					c = mySerial.read();
+//				}
+//				while (!mySerial.available());
+//				c = mySerial.read();
+//				if (c == 0x4d) {
+//					// now we got a correct header)
+//					serialBuf[idx++] = 0x42;
+//					serialBuf[idx++] = 0x4d;
+//					break;
+//				}
+//			}
+//		
+//			while (idx != pmsDataLen) {
+//				while(!mySerial.available());
+//				serialBuf[idx++] = mySerial.read();
+//			}
+//		
+//			for(int i = 0; i < pmsDataLen-2; i++) {
+//				calcsum += (unsigned int)serialBuf[i];
+//		    }
+//		    exptsum = ((unsigned int)serialBuf[30] << 8) + (unsigned int)serialBuf[31];
+//			if(calcsum == exptsum){
+//				g_pm10 = ( serialBuf[10] << 8 ) | serialBuf[11];
+//				g_pm25 = ( serialBuf[12] << 8 ) | serialBuf[13];
+//				g_pm100 = ( serialBuf[14] << 8 ) | serialBuf[15];
+//				break;
+//			}	
+//		
+//		}
 		
-			uint8_t c = 0;
-			int idx = 0;
-			unsigned int calcsum = 0;
-			unsigned int exptsum;
-			
-			memset(serialBuf, 0, pmsDataLen);
-			
-			while (true) {
-				while (c != 0x42) {
-					while (!mySerial.available());
-					c = mySerial.read();
-				}
-				while (!mySerial.available());
-				c = mySerial.read();
-				if (c == 0x4d) {
-					// now we got a correct header)
-					serialBuf[idx++] = 0x42;
-					serialBuf[idx++] = 0x4d;
-					break;
-				}
-			}
-		
-			while (idx != pmsDataLen) {
-				while(!mySerial.available());
-				serialBuf[idx++] = mySerial.read();
-			}
-		
-			for(int i = 0; i < pmsDataLen-2; i++) {
-				calcsum += (unsigned int)serialBuf[i];
-		    }
-		    exptsum = ((unsigned int)serialBuf[30] << 8) + (unsigned int)serialBuf[31];
-			if(calcsum == exptsum){
-				g_pm10 = ( serialBuf[10] << 8 ) | serialBuf[11];
-				g_pm25 = ( serialBuf[12] << 8 ) | serialBuf[13];
-				g_pm100 = ( serialBuf[14] << 8 ) | serialBuf[15];
-				break;
-			}	
-		
-		}
-		
-//		unsigned long timeout = millis();
-//	    int count = 0;
-//	    byte incomeByte[NUM_INCOME_BYTE];
-//	    boolean startcount = false;
-//	    byte data;
-//	    mySerial.begin(9600);
-//	    while (1){
-//	      if((millis() - timeout) > 3000) {    
-//	        Serial.println("[SENSOR-ERROR-TIMEOUT]");
-//	        break;
-//	      }
-//	      if(mySerial.available()){
-//	        data=mySerial.read();
-//	        if(data==CHAR_PRELIM && !startcount){
-//	          startcount = true;
-//	          count++;
-//	          incomeByte[0]=data;
-//	        } else if (startcount){
-//	          count++;
-//	          incomeByte[count-1]=data;
-//	          if(count>=NUM_INCOME_BYTE) {break;}
-//	        }
-//	      }
-//	    }
-//	    mySerial.end();
-//	    mySerial.flush();
-//	    unsigned int calcsum = 0; // BM
-//	    unsigned int exptsum;
-//	    for(int i = 0; i < 30; i++) {
-//	      calcsum += (unsigned int)incomeByte[i];
-//	    }
-//	  
-//	    exptsum = ((unsigned int)incomeByte[CHECK_BYTE] << 8) + (unsigned int)incomeByte[CHECK_BYTE+1];
-//	    if(calcsum == exptsum) {
-//	      *PM10 = ((unsigned int)incomeByte[PM10_BYTE] << 8) + (unsigned int)incomeByte[PM10_BYTE+1];
-//	      *PM25 = ((unsigned int)incomeByte[PM25_BYTE] << 8) + (unsigned int)incomeByte[PM25_BYTE+1];
-//	      *PM100 = ((unsigned int)incomeByte[PM100_BYTE] << 8) + (unsigned int)incomeByte[PM100_BYTE+1];
-//	    } else {
-//	      Serial.println("#[exception] PM2.5 Sensor CHECKSUM ERROR!");
-//	      *PM10 = ERROR_VALUE;
-//	      *PM25 = ERROR_VALUE;
-//	      *PM100 = ERROR_VALUE;
-//	    }	
+		unsigned long timeout = millis();
+	    int count = 0;
+	    byte incomeByte[NUM_INCOME_BYTE];
+	    boolean startcount = false;
+	    byte data;
+	    mySerial.begin(9600);
+	    while (1){
+	      if((millis() - timeout) > 3000) {    
+	        Serial.println("[SENSOR-ERROR-TIMEOUT]");
+	        break;
+	      }
+	      if(mySerial.available()){
+	        data=mySerial.read();
+	        if(data==CHAR_PRELIM && !startcount){
+	          startcount = true;
+	          count++;
+	          incomeByte[0]=data;
+	        } else if (startcount){
+	          count++;
+	          incomeByte[count-1]=data;
+	          if(count>=NUM_INCOME_BYTE) {break;}
+	        }
+	      }
+	    }
+	    mySerial.end();
+	    mySerial.flush();
+	    unsigned int calcsum = 0; // BM
+	    unsigned int exptsum;
+	    for(int i = 0; i < 30; i++) {
+	      calcsum += (unsigned int)incomeByte[i];
+	    }
+	  
+	    exptsum = ((unsigned int)incomeByte[CHECK_BYTE] << 8) + (unsigned int)incomeByte[CHECK_BYTE+1];
+	    if(calcsum == exptsum) {
+	      *PM10 = ((unsigned int)incomeByte[PM10_BYTE] << 8) + (unsigned int)incomeByte[PM10_BYTE+1];
+	      *PM25 = ((unsigned int)incomeByte[PM25_BYTE] << 8) + (unsigned int)incomeByte[PM25_BYTE+1];
+	      *PM100 = ((unsigned int)incomeByte[PM100_BYTE] << 8) + (unsigned int)incomeByte[PM100_BYTE+1];
+	    } else {
+	      Serial.println("#[exception] PM2.5 Sensor CHECKSUM ERROR!");
+	      *PM10 = ERROR_VALUE;
+	      *PM25 = ERROR_VALUE;
+	      *PM100 = ERROR_VALUE;
+	    }	
 	}
 #endif
 #if OUTPUT_LED > 0
@@ -457,9 +459,7 @@ void setup()
 	
 	#if SENSE_PM > 0
 		init_Sensor_PM();
-		mySerial.begin(9600);
-			pinMode(10, INPUT);
-			pinMode(13, INPUT); 
+		 
 	#endif
 	
 	#if LORA_USE > 0
