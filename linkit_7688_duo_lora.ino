@@ -42,15 +42,15 @@ int g_pm100 = ERROR_VALUE;	//PM10
  * GPS value: latitude, longitude & GPS fix #
  * value 15 means fake GPS, change this value to 0 if you using real GPS module
  * * * * * */
-char g_GPS_LAT[] = "25.0228";  	// device's gps latitude, IIS NRL, Academia Sinica in DMS format, DD format: 25.041114
-char g_GPS_LON[] = "121.3652"; 	// device's gps longitude, IIS NRL, Academia Sinica in DMS format, DD format: 121.614444
+char g_GPS_LAT[] = "25.0111";  	// device's gps latitude, IIS NRL, Academia Sinica in DMS format, DD format: 25.041114, DMS format: 25.0228
+char g_GPS_LON[] = "121.3256"; 	// device's gps longitude, IIS NRL, Academia Sinica in DMS format, DD format: 121.614444, DMS format: 121.3652
 int g_fix_num = 15;				//15 means fake GPS
 
 /* * * * * *
  * global variable
  * Smart 7688 Duo ID
  * * * * * */
-String g_dev_id = "005"; 
+String g_dev_id = "0007"; 
 
 #if DEV_TH > 0
 	#if DEV_TH == 1
@@ -329,12 +329,12 @@ String g_dev_id = "005";
 	#endif
 	void init_LoRa(){
 		#if LORA_USE == 1
-			lora.begin(9600);	//LoRa
+//			lora.begin(9600);	//LoRa
 		#endif		
 	}
 	void LoRaBitMap(byte &app_id, float &temperature, float &humidity, int &pm25, int &pm100, int &fix_num){
 		#if LORA_USE == 1
-			
+			lora.begin(9600);
 			word temperatureLora = (int)((temperature+20)*10);
 			word humiditylora = (int)(humidity*10);
 			word pm25lora = pm25;
@@ -430,8 +430,10 @@ String g_dev_id = "005";
 			lora_trans[2], lora_trans[3], lora_trans[4], lora_trans[5], lora_trans[6], lora_trans[7], lora_trans[8],  \
 			lora_trans[9], lora_trans[10]);
 			Serial.println(buff);
-			lora.listen();
+			
 			lora.print(buff);
+			lora.end();
+			lora.flush();
 		//	Serial1.write(buff,33);
 		#endif
 	}
@@ -515,7 +517,7 @@ void loop()
 	SerialMonitor();
 
 	GetDataToMT7688();
-	delay(6000);
+	delay(60650);
 }
 
 
