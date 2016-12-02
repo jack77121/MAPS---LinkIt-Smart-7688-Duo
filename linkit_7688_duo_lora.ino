@@ -48,9 +48,10 @@ int g_fix_num = 15;				//15 means fake GPS
 
 /* * * * * *
  * global variable
- * Smart 7688 Duo ID
+ * Smart 7688 Duo ID and tick after booting
  * * * * * */
 String g_dev_id = "0007"; 
+unsigned long g_boot_tick;
 
 #if DEV_TH > 0
 	#if DEV_TH == 1
@@ -517,7 +518,7 @@ void loop()
 	SerialMonitor();
 
 	GetDataToMT7688();
-	delay(60650);
+	delay(5000);
 }
 
 
@@ -547,6 +548,7 @@ void SerialMonitor(){
 }
 	
 void GetDataToMT7688(){
+	g_boot_tick = millis();
 	String temperature_str = String(g_env_temperature, 2);
 	String humidity_str = String(g_env_humidity, 2);
 	String baro_str = String(g_env_baro, 2);
@@ -555,7 +557,10 @@ void GetDataToMT7688(){
 	String pm100_str = String(g_pm100);
 	String dev_temperature_str = String(g_dev_temperature, 2);
 	String dev_humidity_str = String(g_dev_humidity, 2);
-	String data_str = String(g_dev_id + "|" + temperature_str + "|" + humidity_str + "|" + baro_str + "|" + pm10_str + "|" + pm25_str + "|" + pm100_str + "|" + dev_temperature_str + "|" + dev_humidity_str);
+	String g_boot_tick_str = String(g_boot_tick);
+//	|ver_format=3|FAKE_GPS=1|app=MAPS|ver_app=5.1.1|device_id=04000511|tick=0|date=2016-11-30|time=07:29:21|device=LinkIt_Smart_7688_Duo|s_d0=35|s_d1=46|s_t4=24.5|s_h4=71.3|gps_lat=25.019722|gps_lon=121.548889|gps_fix=1|gps_num=15
+//	String data_str = String(g_dev_id + "|" + temperature_str + "|" + humidity_str + "|" + baro_str + "|" + pm10_str + "|" + pm25_str + "|" + pm100_str + "|" + dev_temperature_str + "|" + dev_humidity_str);
+	String data_str = String("|tick=" + g_boot_tick_str + "|s_t4=" + temperature_str + "|s_h4=" + humidity_str + "|s_b2=" + baro_str + "|s_d2=" + pm10_str + "|s_d0=" + pm25_str + "|s_d1=" + pm100_str + "|d_t5=" + dev_temperature_str + "|d_h5=" + dev_humidity_str);
 	Serial.println("My string to MT7688:");
 	Serial.println(data_str);
 	Serial1.print(data_str);
