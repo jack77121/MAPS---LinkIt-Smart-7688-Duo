@@ -155,53 +155,6 @@ unsigned long g_boot_tick;
 	    return;
 	  }
 	void get_Env_PM(int *PM10 = 0, int *PM25 = 0, int *PM100 = 0){
-
-//		g_pm10 = -1;	//PM1
-//		g_pm25 = -1;	//PM2.5
-//		g_pm100 = -1;//PM10
-//		while(true){
-//			mySerial.listen();
-//		
-//			uint8_t c = 0;
-//			int idx = 0;
-//			unsigned int calcsum = 0;
-//			unsigned int exptsum;
-//			
-//			memset(serialBuf, 0, pmsDataLen);
-//			
-//			while (true) {
-//				while (c != 0x42) {
-//					while (!mySerial.available());
-//					c = mySerial.read();
-//				}
-//				while (!mySerial.available());
-//				c = mySerial.read();
-//				if (c == 0x4d) {
-//					// now we got a correct header)
-//					serialBuf[idx++] = 0x42;
-//					serialBuf[idx++] = 0x4d;
-//					break;
-//				}
-//			}
-//		
-//			while (idx != pmsDataLen) {
-//				while(!mySerial.available());
-//				serialBuf[idx++] = mySerial.read();
-//			}
-//		
-//			for(int i = 0; i < pmsDataLen-2; i++) {
-//				calcsum += (unsigned int)serialBuf[i];
-//		    }
-//		    exptsum = ((unsigned int)serialBuf[30] << 8) + (unsigned int)serialBuf[31];
-//			if(calcsum == exptsum){
-//				g_pm10 = ( serialBuf[10] << 8 ) | serialBuf[11];
-//				g_pm25 = ( serialBuf[12] << 8 ) | serialBuf[13];
-//				g_pm100 = ( serialBuf[14] << 8 ) | serialBuf[15];
-//				break;
-//			}	
-//		
-//		}
-		
 		unsigned long timeout = millis();
 	    int count = 0;
 	    byte incomeByte[NUM_INCOME_BYTE];
@@ -486,23 +439,34 @@ void loop()
 	//get sensor value
 
 	#if DEV_TH > 0
+		g_dev_temperature = 0;
+		g_dev_humidity = 0;
 		g_dev_temperature = get_Dev_Temperature();
 		g_dev_humidity = get_Dev_Humidity();
 	#endif
 
 	#if SENSE_TH > 0
+		g_env_temperature = 0;
+		g_env_humidity = 0;
 		g_env_temperature = get_Env_Temperature();
 		g_env_humidity = get_Env_Humidity();
 	#endif
 
 	#if SENSE_BAROMETER > 0
+		g_env_baro = 0;
 		g_env_baro = get_Env_Pressure();
 	#endif
 
 	#if SENSE_PM > 0
+		g_pm10 = 0;
+		g_pm25 = 0;
+		g_pm100 = 0;
 		get_Env_PM(&g_pm10, &g_pm25, &g_pm100);
 	#endif
 	#if GPS_USE > 0
+		g_GPS_LAT = 0;
+		g_GPS_LON = 0;
+		g_fix_num = 0;
 		get_GPS(g_GPS_LAT, g_GPS_LON, &g_fix_num);
 	#endif
 
@@ -558,8 +522,7 @@ void GetDataToMT7688(){
 	String dev_temperature_str = String(g_dev_temperature, 2);
 	String dev_humidity_str = String(g_dev_humidity, 2);
 	String g_boot_tick_str = String(g_boot_tick);
-//	|ver_format=3|FAKE_GPS=1|app=MAPS|ver_app=5.1.1|device_id=04000511|tick=0|date=2016-11-30|time=07:29:21|device=LinkIt_Smart_7688_Duo|s_d0=35|s_d1=46|s_t4=24.5|s_h4=71.3|gps_lat=25.019722|gps_lon=121.548889|gps_fix=1|gps_num=15
-//	String data_str = String(g_dev_id + "|" + temperature_str + "|" + humidity_str + "|" + baro_str + "|" + pm10_str + "|" + pm25_str + "|" + pm100_str + "|" + dev_temperature_str + "|" + dev_humidity_str);
+	
 	String data_str = String("|tick=" + g_boot_tick_str + "|s_t4=" + temperature_str + "|s_h4=" + humidity_str + "|s_b2=" + baro_str + "|s_d2=" + pm10_str + "|s_d0=" + pm25_str + "|s_d1=" + pm100_str + "|d_t5=" + dev_temperature_str + "|d_h5=" + dev_humidity_str);
 	Serial.println("My string to MT7688:");
 	Serial.println(data_str);
