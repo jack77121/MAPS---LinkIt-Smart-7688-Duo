@@ -1,5 +1,4 @@
 # Micro Air Pollution Sensing
-##Use LinkIt Smart 7688 Duo
 
 ![Image of appearance](https://github.com/jack77121/MAPS---LinkIt-Smart-7688-Duo/blob/master/MAPS_7688duo_RP1135C.png)
 
