@@ -1,6 +1,9 @@
-# MAPS-LinkIt Smart 7688 Duo
+# Micro Air Pollution Sensing
+##Use LinkIt Smart 7688 Duo
+
 ![Image of appearance]
-(https://github.com/jack77121/MAPS---LinkIt-Smart-7688-Duo/blob/master/MAPS_7688duo_appearance.png)
+(https://github.com/jack77121/MAPS---LinkIt-Smart-7688-Duo/blob/master/MAPS_7688duo_RP1135C.png)
+MAPS v5.1 appearance
 
 ## Story
 **M**icro **A**ir **P**ollution **S**ensing - MAPS
@@ -15,6 +18,8 @@ For more air pollution sensing project, you can visit [LASS facebook](https://ww
 (https://github.com/jack77121/MAPS---LinkIt-Smart-7688-Duo/blob/master/PCB_layout.png)
 
 (unit: mm)
+
+
 
 
 
