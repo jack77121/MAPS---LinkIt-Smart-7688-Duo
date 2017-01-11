@@ -522,8 +522,8 @@ void GetDataToMT7688(){
 	String dev_temperature_str = String(g_dev_temperature, 2);
 	String dev_humidity_str = String(g_dev_humidity, 2);
 	String g_boot_tick_str = String(g_boot_tick);
-	
-	String data_str = String("|tick=" + g_boot_tick_str + "|s_t4=" + temperature_str + "|s_h4=" + humidity_str + "|s_b2=" + baro_str + "|s_d2=" + pm10_str + "|s_d0=" + pm25_str + "|s_d1=" + pm100_str + "|d_t5=" + dev_temperature_str + "|d_h5=" + dev_humidity_str);
+	String data_str = "";
+	data_str = String("|tick=" + g_boot_tick_str + "|s_t4=" + temperature_str + "|s_h4=" + humidity_str + "|s_b2=" + baro_str + "|s_d2=" + pm10_str + "|s_d0=" + pm25_str + "|s_d1=" + pm100_str + "|d_t5=" + dev_temperature_str + "|d_h5=" + dev_humidity_str + "\n");
 	Serial.println("My string to MT7688:");
 	Serial.println(data_str);
 	Serial1.print(data_str);
