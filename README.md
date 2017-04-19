@@ -27,10 +27,8 @@ p.s SHT25 is for device temperature, humidity monitoring and future calibration 
 
 (unit: mm)
 
-##Installing
-
-###Instrution
-
+## Installing
+### Instrution
 MAPS use both MT7688AN (MPU) and ATmega32U4 (MCU) onboard to complete its jobs. They communicate through UART (in this project). 
 
 ATmega32U4 is reponsible for sensors data collection.( and data boardcasting through LPWAN, if you use LoRa.)
@@ -43,13 +41,13 @@ p.s scripts for MPU are still in progress, will be update ASAP.
  
 
 Below is the installing instruction about 
-###MCU program (arduino)
+### MCU program (arduino)
 1. You can download Arduino IDE [here](https://www.arduino.cc/en/Main/Software).
 2. Put all folders in `library` into your arduino `libraries` folder. [Tutorial](https://www.arduino.cc/en/Guide/Libraries#toc5)
 3. Use Arduino IDE to upload the code: `linkit_7688_duo_lora.ino`. [Tutorial](https://www.arduino.cc/en/Guide/HowtoUpload)
 
 p.s `linkit_7688_duo_lora.ino` need to be in a same name folder, in this project, called `linkit_7688_duo_lora`. If you don't do let, the Arduino app will still ask you to make one. 
 
-###MPU scripts (python + ash)
+### MPU scripts (python + ash)
 (Continue updating...)
 
