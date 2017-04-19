@@ -30,6 +30,7 @@ p.s SHT25 is for device temperature, humidity monitoring and future calibration 
 ##Installing
 
 ###Instrution
+
 MAPS use both MT7688AN (MPU) and ATmega32U4 (MCU) onboard to complete its jobs. They communicate through UART (in this project). 
 
 ATmega32U4 is reponsible for sensors data collection.( and data boardcasting through LPWAN, if you use LoRa.)
