@@ -1,3 +1,5 @@
 linkit_smart7688_duo_extendboard/for_pcb_ manufacturer/
 linkit_smart7688_duo_extendboard/*.lck
 linkit_smart7688_duo_extendboard/.DS_Store
+MAPS_user_guide*
+MAPS_admin*
