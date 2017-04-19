@@ -28,6 +28,7 @@ p.s SHT25 is for device temperature, humidity monitoring and future calibration 
 (unit: mm)
 
 ##Installing
+
 ###Instrution
 MAPS use both MT7688AN (MPU) and ATmega32U4 (MCU) onboard to complete its jobs. They communicate through UART (in this project). 
 
